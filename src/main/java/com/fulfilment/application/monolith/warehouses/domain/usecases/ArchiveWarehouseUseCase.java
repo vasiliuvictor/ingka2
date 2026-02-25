@@ -4,6 +4,8 @@ import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import com.fulfilment.application.monolith.warehouses.domain.ports.ArchiveWarehouseOperation;
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @ApplicationScoped
 public class ArchiveWarehouseUseCase implements ArchiveWarehouseOperation {
@@ -15,9 +17,9 @@ public class ArchiveWarehouseUseCase implements ArchiveWarehouseOperation {
   }
 
   @Override
+  @Transactional
   public void archive(Warehouse warehouse) {
-    // TODO implement this method
-
+    warehouse.archivedAt = LocalDateTime.now();
     warehouseStore.update(warehouse);
   }
 }

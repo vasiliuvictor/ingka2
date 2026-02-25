@@ -1,11 +1,25 @@
 package com.fulfilment.application.monolith.stores;
 
+import com.fulfilment.application.monolith.stores.StoreResource.StoreCreatedEvent;
+import com.fulfilment.application.monolith.stores.StoreResource.StoreUpdatedEvent;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.event.TransactionPhase;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 @ApplicationScoped
 public class LegacyStoreManagerGateway {
+
+  public void onStoreCreated(
+      @Observes(during = TransactionPhase.AFTER_SUCCESS) StoreCreatedEvent event) {
+    createStoreOnLegacySystem(event.store);
+  }
+
+  public void onStoreUpdated(
+      @Observes(during = TransactionPhase.AFTER_SUCCESS) StoreUpdatedEvent event) {
+    updateStoreOnLegacySystem(event.store);
+  }
 
   public void createStoreOnLegacySystem(Store store) {
     // just to emulate as this would send this to a legacy system, let's write a temp file with the
